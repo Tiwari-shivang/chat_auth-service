@@ -19,4 +19,8 @@ public class ShortLivedToken {
         Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
         return claims.getSubject().matches(email) && !claims.getExpiration().before(new Date());
     }
+
+    public String extractEmail (String token){
+        return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload().getSubject();
+    }
 }

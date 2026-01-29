@@ -65,6 +65,10 @@ public class AuthService_Impl implements AuthService {
 
     @Override
     public SuccessResponse forgotPassword(ForgotRequest request) throws MessagingException {
+        Users user = userRepo.findByEmail(request.getEmail());
+        if(user == null){
+            throw new RuntimeException("User not found");
+        }
         ShortLivedToken shortLivedToken = new ShortLivedToken();
         String token = shortLivedToken.createShortLivedToken(request.getEmail());
         String subject = "Password Reset Request";
@@ -99,5 +103,19 @@ public class AuthService_Impl implements AuthService {
         senderCustom.setContent(content);
         senderCustom.sendMail();
         return new SuccessResponse("Mail sent");
+    }
+
+    @Override
+    public SuccessResponse resetPassword(ResetPasswordReq request){
+        ShortLivedToken shortLivedToken = new ShortLivedToken();
+        String email = shortLivedToken.extractEmail(request.getShortLivedToken());
+        if(shortLivedToken.validateShortLivedToken(email, request.getShortLivedToken())){
+            Users user = userRepo.findByEmail(email);
+            user.setPassword(encoder.encode(request.getNewPassword()));
+            user.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+            userRepo.save(user);
+            return new SuccessResponse("Password updated");
+        }
+        throw new RuntimeException();
     }
 }

@@ -1,14 +1,12 @@
 package com.chat.auth.controllers;
 import com.chat.auth.DTOs.ForgotRequest;
 import com.chat.auth.DTOs.LoginRequest;
+import com.chat.auth.DTOs.ResetPasswordReq;
 import com.chat.auth.DTOs.SignUpRequest;
 import com.chat.auth.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -29,5 +27,10 @@ public class AuthController {
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestBody ForgotRequest request) throws Exception{
         return ResponseEntity.ok(authService.forgotPassword(request));
+    }
+
+    @PutMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordReq request){
+        return ResponseEntity.ok(authService.resetPassword(request));
     }
 }

@@ -7,4 +7,5 @@ public interface AuthService {
     UserResponse signUp(SignUpRequest request);
     LoginResponse login(LoginRequest request);
     SuccessResponse forgotPassword(ForgotRequest request) throws MessagingException;
+    SuccessResponse resetPassword(ResetPasswordReq request);
 }
