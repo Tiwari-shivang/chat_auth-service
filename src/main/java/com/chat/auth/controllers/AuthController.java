@@ -1,4 +1,5 @@
 package com.chat.auth.controllers;
+import com.chat.auth.DTOs.ForgotRequest;
 import com.chat.auth.DTOs.LoginRequest;
 import com.chat.auth.DTOs.SignUpRequest;
 import com.chat.auth.services.AuthService;
@@ -23,5 +24,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request){
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody ForgotRequest request) throws Exception{
+        return ResponseEntity.ok(authService.forgotPassword(request));
     }
 }
