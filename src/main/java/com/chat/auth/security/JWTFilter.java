@@ -28,7 +28,7 @@ public class JWTFilter extends OncePerRequestFilter {
             filter.doFilter(request, response);
             return;
         }
-        String token = request.getHeader("Authentication").substring(7);
+        String token = request.getHeader("Authorization").substring(7);
         UserDetails securityModel = securityService.loadUserByUsername(utils.extractEmail(token));
         Users user = (Users) securityModel;
         if(SecurityContextHolder.getContext().getAuthentication() == null && utils.validateToken(token, user)){
