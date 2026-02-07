@@ -12,8 +12,8 @@ import org.hibernate.type.SqlTypes;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +33,7 @@ public class Users implements UserDetails {
     private roles role;
     @Enumerated(EnumType.STRING)
     private gender gender;
-    private Date dob;
+    private LocalDate dob;
     private Boolean isActive;
     private Timestamp lastLogin, createdAt, updatedAt;
 

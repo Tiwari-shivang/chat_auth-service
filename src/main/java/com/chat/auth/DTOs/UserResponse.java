@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,6 +17,6 @@ public class UserResponse {
     private String id, firstName, lastName, userName, email;
     private roles role;
     private gender gender;
-    private Date dob;
+    private LocalDate dob;
     private Boolean isActive;
 }

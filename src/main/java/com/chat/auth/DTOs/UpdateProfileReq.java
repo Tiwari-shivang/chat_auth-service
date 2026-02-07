@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -13,5 +13,5 @@ import java.util.Date;
 public class UpdateProfileReq {
     private String id, firstName, lastName;
     private gender gender;
-    private Date dob;
+    private LocalDate dob;
 }

@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -17,5 +17,5 @@ public class SignUpRequest {
     private String firstName, lastName, userName, email, password;
     private roles role;
     private gender gender;
-    private Date dob;
+    private LocalDate dob;
 }
