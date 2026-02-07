@@ -2,6 +2,8 @@ package com.chat.auth.models;
 
 import com.chat.auth.enums.gender;
 import com.chat.auth.enums.roles;
+
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,6 +35,7 @@ public class Users implements UserDetails {
     private roles role;
     @Enumerated(EnumType.STRING)
     private gender gender;
+    @Nullable
     private LocalDate dob;
     private Boolean isActive;
     private Timestamp lastLogin, createdAt, updatedAt;

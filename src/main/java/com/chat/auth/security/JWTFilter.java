@@ -24,7 +24,15 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filter) throws ServletException, IOException {
-        if(request.getServletPath().startsWith("/auth")){
+        String path = request.getServletPath();
+        if(request.getServletPath().startsWith("/auth") || request.getServletPath().startsWith("/oauth")){
+            filter.doFilter(request, response);
+            return;
+        }
+        String authHeader = request.getHeader("Authorization");
+
+        // ✅ If no token, just continue (don’t break flow)
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filter.doFilter(request, response);
             return;
         }
@@ -35,5 +43,6 @@ public class JWTFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null, securityModel.getAuthorities()));
             filter.doFilter(request, response);
         }
+        filter.doFilter(request, response);
     }
 }
