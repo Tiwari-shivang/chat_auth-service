@@ -4,6 +4,9 @@ import com.chat.auth.DTOs.LoginRequest;
 import com.chat.auth.DTOs.ResetPasswordReq;
 import com.chat.auth.DTOs.SignUpRequest;
 import com.chat.auth.services.AuthService;
+
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +18,13 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody SignUpRequest request){
-        return ResponseEntity.ok(authService.signUp(request));
+    public ResponseEntity<?> signUp(@RequestBody SignUpRequest request, HttpServletResponse response){
+        return ResponseEntity.ok(authService.signUp(request, response));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request){
-        return ResponseEntity.ok(authService.login(request));
+    public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletResponse response){
+        return ResponseEntity.ok(authService.login(request, response));
     }
 
     @PostMapping("/forgot-password")

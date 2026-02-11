@@ -14,9 +14,10 @@ import java.time.LocalDate;
 @Setter
 @Getter
 public class UserResponse {
-    private String id, firstName, lastName, userName, email;
+    private String uid, firstName, lastName, userName, email;
     private roles role;
     private gender gender;
     private LocalDate dob;
     private Boolean isActive;
+    private Boolean isVerified;
 }

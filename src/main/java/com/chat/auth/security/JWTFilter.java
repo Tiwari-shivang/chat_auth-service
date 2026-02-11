@@ -4,6 +4,7 @@ import com.chat.auth.models.Users;
 import com.chat.auth.services.SecurityService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,13 @@ public class JWTFilter extends OncePerRequestFilter {
             filter.doFilter(request, response);
             return;
         }
-        String token = request.getHeader("Authorization").substring(7);
+        String token = null;
+        for (Cookie cookie: request.getCookies()){
+            if("access_token".matches(cookie.getName())){
+                token=cookie.getValue();
+                break;
+            }
+        }
         UserDetails securityModel = securityService.loadUserByUsername(utils.extractEmail(token));
         Users user = (Users) securityModel;
         if(SecurityContextHolder.getContext().getAuthentication() == null && utils.validateToken(token, user)){

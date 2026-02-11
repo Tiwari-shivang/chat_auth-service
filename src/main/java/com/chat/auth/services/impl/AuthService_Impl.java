@@ -8,8 +8,12 @@ import com.chat.auth.repositories.userRepository;
 import com.chat.auth.security.JWTUtils;
 import com.chat.auth.services.AuthService;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,7 +41,8 @@ public class AuthService_Impl implements AuthService {
     @Value("${client.url}")
     private String clientUrl;
 
-    public UserResponse signUp(SignUpRequest request){
+    @Override
+    public SuccessResponse signUp(SignUpRequest request, HttpServletResponse response){
         Users user = new Users();
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
@@ -48,19 +53,25 @@ public class AuthService_Impl implements AuthService {
         user.setGender(request.getGender());
         user.setDob(request.getDob());
         user.setIsActive(true);
+        user.setIsVerified(false);
         user.setLastLogin(new Timestamp(System.currentTimeMillis()));
         user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         user.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        userRepo.save(user);
-        return new UserResponse(user.getUid().toString(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getRole(), user.getGender(), user.getDob(), user.getIsActive());
+        Users newUser = userRepo.save(user);
+        ResponseCookie cookie = buildAuthCookie(newUser);
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        return new SuccessResponse("Account created successfully");
     }
 
     @Override
-    public LoginResponse login(LoginRequest request) {
+    public SuccessResponse login(LoginRequest request, HttpServletResponse response) {
         Authentication auth = new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword());
         Users user = (Users) manager.authenticate(auth).getPrincipal();
         assert user != null;
-        return new LoginResponse(utils.buildToken(user));
+        user.setLastLogin(new Timestamp(System.currentTimeMillis()));
+        Users loggedInUser = userRepo.save(user);
+        response.addHeader(HttpHeaders.SET_COOKIE, buildAuthCookie(loggedInUser).toString());
+        return new SuccessResponse("User logged in successfully");
     }
 
     @Override
@@ -117,5 +128,16 @@ public class AuthService_Impl implements AuthService {
             return new SuccessResponse("Password updated");
         }
         throw new RuntimeException();
+    }
+
+    private ResponseCookie buildAuthCookie(Users user){
+        String token = utils.buildToken(user);
+        return ResponseCookie.from("access_token", token)
+        .httpOnly(true)
+        .maxAge(60*60)
+        .sameSite("Strict")
+        .path("/")
+        .secure(false)
+        .build();
     }
 }

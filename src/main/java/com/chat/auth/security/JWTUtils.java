@@ -24,6 +24,7 @@ public class JWTUtils {
         claims.put("role", user.getRole().toString());
         claims.put("gender", user.getGender().name());
         claims.put("isActive", user.getIsActive().toString());
+        claims.put("isVerified", user.getIsVerified().toString());
         return Jwts.builder().signWith(secret).subject(user.getEmail()).claim("user", claims).issuedAt(new Date()).expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)).compact();
     }
 

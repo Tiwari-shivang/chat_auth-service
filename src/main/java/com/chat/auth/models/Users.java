@@ -36,6 +36,7 @@ public class Users implements UserDetails {
     private LocalDate dob;
     private Boolean isActive;
     private Timestamp lastLogin, createdAt, updatedAt;
+    private Boolean isVerified;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

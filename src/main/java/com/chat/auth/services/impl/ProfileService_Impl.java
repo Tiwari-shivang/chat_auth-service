@@ -28,7 +28,7 @@ public class ProfileService_Impl implements ProfileService {
     @Override
     public UserResponse getMyProfile(String userId){
         Users user = userRepo.findById(UUID.fromString(userId)).orElseThrow(() -> new RuntimeException("Profile not found"));
-        return new UserResponse(user.getUid().toString(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getRole(), user.getGender(), user.getDob(), user.getIsActive());
+        return new UserResponse(user.getUid().toString(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getRole(), user.getGender(), user.getDob(), user.getIsActive(), user.getIsVerified());
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ProfileService_Impl implements ProfileService {
         user.setGender(request.getGender());
         user.setDob(request.getDob());
         userRepo.save(user);
-        return new UserResponse(user.getUid().toString(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getRole(), user.getGender(), user.getDob(), user.getIsActive());
+        return new UserResponse(user.getUid().toString(), user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail(), user.getRole(), user.getGender(), user.getDob(), user.getIsActive(), user.getIsVerified());
     }
 
     @Override
