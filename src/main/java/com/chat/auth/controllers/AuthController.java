@@ -36,4 +36,5 @@ public class AuthController {
     public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordReq request){
         return ResponseEntity.ok(authService.resetPassword(request));
     }
+
 }

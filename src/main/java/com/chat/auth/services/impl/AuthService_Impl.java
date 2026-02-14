@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,8 +24,6 @@ import java.sql.Timestamp;
 
 @Service
 public class AuthService_Impl implements AuthService {
-    @Autowired
-    private JavaMailSender sender;
     @Autowired
     private userRepository userRepo;
     @Autowired
@@ -42,7 +39,7 @@ public class AuthService_Impl implements AuthService {
     private String clientUrl;
 
     @Override
-    public SuccessResponse signUp(SignUpRequest request, HttpServletResponse response){
+    public SuccessResponse signUp(SignUpRequest request, HttpServletResponse response) {
         Users user = new Users();
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
@@ -77,7 +74,7 @@ public class AuthService_Impl implements AuthService {
     @Override
     public SuccessResponse forgotPassword(ForgotRequest request) throws MessagingException {
         Users user = userRepo.findByEmail(request.getEmail());
-        if(user == null){
+        if (user == null) {
             throw new RuntimeException("User not found");
         }
         ShortLivedToken shortLivedToken = new ShortLivedToken();
@@ -89,13 +86,13 @@ public class AuthService_Impl implements AuthService {
                 <h2 style="color: blue; font-family: Arial;">
                 Reset Your Password
                 </h2>
-                
-                
+
+
                 <p style="font-size:14px; color:#333;">
                 Click the button below to reset your password.
                 </p>
-                
-                
+
+
                 <a href="http://localhost:5173/reset-password?user=%s"
                 style="
                 background:#4CAF50;
@@ -117,10 +114,10 @@ public class AuthService_Impl implements AuthService {
     }
 
     @Override
-    public SuccessResponse resetPassword(ResetPasswordReq request){
+    public SuccessResponse resetPassword(ResetPasswordReq request) {
         ShortLivedToken shortLivedToken = new ShortLivedToken();
         String email = shortLivedToken.extractEmail(request.getShortLivedToken());
-        if(shortLivedToken.validateShortLivedToken(email, request.getShortLivedToken())){
+        if (shortLivedToken.validateShortLivedToken(email, request.getShortLivedToken())) {
             Users user = userRepo.findByEmail(email);
             user.setPassword(encoder.encode(request.getNewPassword()));
             user.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
@@ -129,15 +126,14 @@ public class AuthService_Impl implements AuthService {
         }
         throw new RuntimeException();
     }
-
-    private ResponseCookie buildAuthCookie(Users user){
+    private ResponseCookie buildAuthCookie(Users user) {
         String token = utils.buildToken(user);
         return ResponseCookie.from("access_token", token)
-        .httpOnly(true)
-        .maxAge(60*60)
-        .sameSite("Strict")
-        .path("/")
-        .secure(false)
-        .build();
+                .httpOnly(true)
+                .maxAge(60 * 60)
+                .sameSite("Strict")
+                .path("/")
+                .secure(false)
+                .build();
     }
 }
